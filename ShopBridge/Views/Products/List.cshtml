@@ -1,0 +1,46 @@
+﻿@model IEnumerable<ShopBridge.Models.Product>
+
+@{
+    ViewData["Title"] = "List";
+    ShopBridge.Models.Product _model = new ShopBridge.Models.Product();
+}
+
+<link href="~/lib/DataTables/css/jquery.dataTables.min.css" rel="stylesheet" />
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12"> @Html.ActionLink("Add Product", "Add", "Products", null, new { @class = "btn btn-primary float-right" })</div>
+    </div>
+    <h4>Product List <span class="oi oi-pencil"></span></h4>
+    <hr />
+    <div class="table-responsive" id="productTable">
+        <table class="table table-bordered" id="productsTable">
+            <thead>
+                <tr>
+                    <th>
+                        ProductId
+                    </th>
+                    <th>
+                        Product Name
+                    </th>
+                    <th>
+                        Product Price
+                    </th> 
+                    <th>
+                        Action
+                    </th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+    
+</div>
+@section Scripts
+    {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            BindDatatable(); 
+        })
+    </script>
+}
