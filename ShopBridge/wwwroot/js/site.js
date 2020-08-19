@@ -1,46 +1,50 @@
 ﻿function SubmitJForm(id) {
-    console.log($(id).serialize());
     if ($(id).valid() == true) {
-        $.ajax({ // create an AJAX call...
-            data: $(id).serialize(), // get the form data
-            type: $(id).attr('method'), // GET or POST
-            url: $(id).attr('action'), // the file to call
-            success: function (response) { // on success..
+        var res = UploadFile();
+        if (res != undefined && res.status.isSuccess) {
+            $.ajax({ // create an AJAX call...
+                data: $(id).serialize(), // get the form data
+                type: $(id).attr('method'), // GET or POST
+                url: $(id).attr('action'), // the file to call
+                success: function (response) { // on success..
+                    if (response.success) {
+                        toastr.success(response.message);
+                        window.location = response.url;
+                    }
+                    else {
+                        toastr.error(response.message);
+                    }
+                },
+                async: false,
+                error: function (jqXHR, exception) {
+                    switch (jqXHR.status) {
 
-                if (response.success) {
-                    toastr.success(response.message);
-                    BindDatatable();
+                        case 0:
+                            alert('Not connect.\nVerify Network.');
+                            break;
+                        case 404:
+                            alert('Requested page not found. [404]');
+                            break;
+                        case 500:
+                            alert('Internal Server Error [500].');
+                            break;
+                        case 404:
+                            alert('Requested page not found. [404]');
+                            break;
+                        default:
+                            alert('Uncaught Error or Exceptions occured.\n' + jqXHR.responseText);
+                            break;
+                    }
+                    if (exception === 'parsererror' || exception === 'abort' || exception === 'timeout') {
+                        alert('Exception Occured' + exception);
+                        return;
+                    }
                 }
-                else {
-                    toastr.error(response.message);
-                }
-            },
-            async: true,
-            error: function (jqXHR, exception) {
-                switch (jqXHR.status) {
-
-                    case 0:
-                        alert('Not connect.\nVerify Network.');
-                        break;
-                    case 404:
-                        alert('Requested page not found. [404]');
-                        break;
-                    case 500:
-                        alert('Internal Server Error [500].');
-                        break;
-                    case 404:
-                        alert('Requested page not found. [404]');
-                        break;
-                    default:
-                        alert('Uncaught Error or Exceptions occured.\n' + jqXHR.responseText);
-                        break;
-                }
-                if (exception === 'parsererror' || exception === 'abort' || exception === 'timeout') {
-                    alert('Exception Occured' + exception);
-                    return;
-                }
-            }
-        });
+            });
+        }
+        else {
+            toastr.error("Error while uploading file.");
+        }
     }
     else {
         var validator = $(id).validate();
@@ -87,18 +91,16 @@ function BindDatatable() {
 
     var tableObj = $('#productsTable');
     var table = tableObj.DataTable({
-        "proccessing": true,
         "serverSide": true,
+        "proccessing": true,
         "ajax": {
             url: "/Products/GetList",
             type: 'POST',
             datatype: 'json'
         },
         "order": [0, "desc"],
-        "language": {
-            "processing": "Processing..",
-            "search": "Search",
-            "searchPlaceholder": "Search..."
+        'language': {
+            'processing': 'Loading...'
         },
         "columns": [
             { "data": "productId", "searchable": false, "visible": false },
@@ -129,4 +131,33 @@ function AddAsterick(id) {
         $(id).next('span[class^="asterisk"]').remove();
         $(id).after(' <span class="asterisk">*</span>');
     }
+}
+
+function UploadFile() {
+    var formdata = new FormData();
+    var file = $('#file')[0].files[0];
+    var filetype = file.type;
+    var filelength = file.size;
+    var res = new Object();
+    if (formdata) {
+        formdata.append("file", file);
+        $.ajax({
+            url: '/FileHandling/UploadFile',
+            type: "POST",
+            async: true,
+            data: formdata,
+            processData: false,
+            contentType: false,
+            async: false,
+            success: function (result) {
+               res = result;
+                if (result.status.isSuccess) {
+                    $("#ProductImage").val(result.data);
+                }
+            },
+            error: function (jqXHR, exception) {
+            }
+        });
+    }
+    return res;
 }

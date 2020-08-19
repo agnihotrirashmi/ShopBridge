@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using AspNetCore.Http.Extensions;
 using System.Text;
+using System.IO;
 
 namespace ShopBridge
 {
@@ -50,6 +51,23 @@ namespace ShopBridge
             {
                 return string.Empty;
             }
+        }
+
+        public static void CheckDir(string strPath)
+        {
+            if (!Directory.Exists(strPath))
+            {
+                Directory.CreateDirectory(strPath);
+            }
+        }
+
+        public static string EpochTime()
+        {
+            DateTime centuryBegin = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+            DateTime currentDate = DateTime.Now;
+            long elapsedTicks = currentDate.Ticks - centuryBegin.Ticks;
+            TimeSpan elapsedSpan = new TimeSpan(elapsedTicks);
+            return Convert.ToInt64(elapsedSpan.TotalMilliseconds).ToString();
         }
 
         public static string ConvertObjectToJson(object obj)

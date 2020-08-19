@@ -10,21 +10,9 @@ namespace ShopBridgeAPI.Models
 {
     public class AddProductModel
     {
-        [Required]
-        [StringLength(200)]
-        [DisplayName("Product Name")]
         public string ProductName { get; set; }
-
-        [Required]
-        [DisplayName("Product Price")]
         public decimal ProductPrice { get; set; }
-
-        [Required]
-        [StringLength(500)]
-        [DisplayName("Product Description")]
         public string ProductDescription { get; set; }
-
-        [DisplayName("Product Image")]
-        public IFormFile ProductImage { get; set; }
+        public string ProductImage { get; set; }
     }
 }

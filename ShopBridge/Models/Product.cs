@@ -25,9 +25,7 @@ namespace ShopBridge.Models
         public string ProductDescription { get; set; }
 
         [DisplayName("Product Image")]
-        [DataType(DataType.Upload)]
-        [FromForm(Name = "file")]
-        public IFormFile file { get; set; }
+        public string ProductImage { get; set; }
     }
 
     public class Product

@@ -134,6 +134,7 @@ namespace ShopBridgeAPI.Controllers
                     ProductName = model.ProductName,
                     ProductDescription = model.ProductDescription,
                     ProductPrice = model.ProductPrice,
+                    ProductImage = model.ProductImage,
                     CreatedOn = DateTime.UtcNow
                 };
                 product.Insert(_product);

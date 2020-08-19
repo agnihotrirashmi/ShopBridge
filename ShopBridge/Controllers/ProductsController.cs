@@ -91,11 +91,10 @@ namespace ShopBridge.Controllers
         /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Add(IFormFile file,[FromForm] AddProductModel model)
+        public async Task<ActionResult> Add([FromForm] AddProductModel model)
         {
             try
             {
-
                 if (ModelState.IsValid)
                 {
                     ResJsonOutput result = await PostDataAsync("/API/Products/AddProduct", model);
